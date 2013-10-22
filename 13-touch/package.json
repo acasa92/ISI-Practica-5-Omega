@@ -1,0 +1,8 @@
+{
+  "name": "alien-invasion-protos-moviles",
+  "version": "0.0.1",
+  "description": "Servidor sencillo para probar prototipos móviles",
+  "dependencies": {
+    "mime": "~1.2.7"
+  }
+}

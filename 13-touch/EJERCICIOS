@@ -1,0 +1,210 @@
+¿Cómo usar este material?:
+
+- Ejecuta el juego finalizado: http://cykod.github.io/AlienInvasion/
+
+- Ejecuta el prototipo. Para poder ejecutar en el móvil este prototipo
+  hay que arrancar el servidor que hemos incluído siguiendo las
+  instrucciones del fichero LEEME que hay en este directorio. El
+  código fuente del prototipo está en el directorio public/
+  
+- A continuación exponemos los requisitos y la especificación de este
+  prototipo.
+
+  Requisitos:
+
+  El objetivo de este prototipo es añadir soporte para pantallas
+  táctiles de forma que se pueda mover la nave del jugador y disparar
+  utilizando 3 botones cuadrados en la parte inferior de la pantalla
+  tactil.
+
+  Dos de los botones son botones de dirección que sirven para
+  desplazarse a izquierda y derecha. Los botones de dirección estarán
+  en la esquina inferior izquierda, uno al lado del otro. En la
+  esquina inferior derecha estará el botón de disparo.
+
+  Los botones de dirección permitirán que el dedo del usuario se pueda
+  desplazar entre ellos sin necesidad de levantarlo de la pantalla.
+
+  El botón de disparo por el contrario requerirá que el usuario
+  levante y vuelva a apoyar el dedo sobre el botón para que se
+  produzca un nuevo disparo.
+
+  Aunque se dibujarán 3 botones cuadrados en la parte inferior, se
+  considerán como zonas activas las franjas verticales de cada botón,
+  para que de esta forma sea más fácil para el usuario acertar con los
+  botones de dirección. De esta forma el usuario tendrá que pensar
+  sólo en qué zona sitúa sus dedos en el eje horizontal, no teniendo
+  que pensar en el eje vertical, por lo que resultará más fácil usar
+  los botones de dirección.
+
+  El juego tiene que adaptarse a diferentes resoluciones. Por ello se
+  deberá ajustar el tamaño de los botones al ancho disponible en el
+  dispositivo. Cada botón tendrá un ancho igual a 1/5 del ancho de la
+  pantalla.
+
+
+
+  Especificación
+
+  Los botones se añadirán a un nuevo tablero (board) que estará encima
+  de todos los demás.
+
+  Como todo tablero, tendrá en su interfaz los métodos step() y
+  draw(). En este caso, step() no ofrecerá ninguna
+  funcionalidad. draw() dibujará los botones de forma que aparezcan
+  hundidos o no en función de si están o no pulsados en el momento en
+  el que se ejecuta step().
+
+  En este prototipo los controles táctiles estarán siempre presentes,
+  por lo que incluso cuando se ejecute el juego en el escritorio los
+  botones aparecerán dibujados en la pantalla.
+
+
+
+EJERCICIOS
+
+1. Comprueba el funcionamiento de este prototipo. Para poder ejecutar
+   en el móvil el juego hay que arrancar el servidor que hemos
+   incluído siguiendo las instrucciones del fichero LEEME que hay en
+   este directorio. El código fuente del prototipo está en el
+   directorio public/
+
+
+2. Estudia los cambios que se han realizado en el código para
+   implementar los niveles de juego en este prototipo:
+
+   En engine.js se ha añadido el constructor TouchControls(), que se
+   usa para controlar el juego en pantallas táctiles. Los métodos
+   draw() y drawSquare() dibujan los botones de la pantalla táctil.
+
+   En engine.js se ha modificado Game.initialize() para que añada el
+   tablero de los botones táctiles a Game.boards. También se han
+   añadido 2 propiedades a Game que se utilizarán para dimensionar el
+   canvas en pantallas táctiles: canvasMultiplier y playerOffset.
+
+
+   Procesamiento de eventos de la pantalla táctil
+
+   Cuando hablemos de dedos nos referimos tanto a los dedos de la mano
+   como a cualquier otro elemento que se utilice para tocar sobre la
+   pantalla, como por ejemplo punteros táctiles.
+
+   El método TouchControls.trackTouch() es el encargado de procesar
+   los eventos. En el constructor de TouchControl se registra
+   trackTouch() como manejador de los eventos touchstart, touchmove y
+   touchend que se produzcan sobre el elemento DOM del canvas del
+   juego. En este caso haciendo uso de la API del browser y no de
+   jQuery.
+
+   Para poder procesar los toques sobre los botones en la pantalla
+   táctil hay que registrar manejadores para estos 3 nuevos eventos:
+
+     Evento       Descripción
+     ===========  ===========
+     touchstart:  disparado cuando se detecta un nuevo toque en la pantalla
+
+     touchmove:   disparado cuando se detecta que un dedo se ha movido 
+   
+     touchend:    disparado cuando un dedo que estaba en la pantalla se retira
+
+
+   A diferencia del evento click del ratón, cada uno de estos tres
+   eventos proporciona 3 listas con más información:
+
+     List                  Descripción
+     ====================  ===========
+     event.touches :       todos los dedos que están tocando la pantalla
+
+     event.targetTouches:  todos los dedos que están colocados sobre el
+                           elemento DOM en el que se ha producido el evento 
+
+     event.changedTouches: todos los dedos que han intervenido en el
+                           evento actual. Por ejemplo, en un evento
+                           "touchend", sería el dedo que se ha retirado
+                           del elemento DOM, en un "touchstart" el dedo
+                           acaba de tocar el elemento DOM y en uno
+                           "touchmove" el dedo que, estando pulsando el
+                           elemento DOM, se ha movido.
+
+
+   Cada lista está compuesta por objetos, cada uno de los cuáles
+   incluye la siguiente información del toque sobre la pantalla:
+
+     Atributo    Descripción
+     =========== ===========
+     identifier: identificador único numérico para este dedo. Mientras no
+                 se retire el dedo, todos los eventos generados por este dedo 
+                 tendrán el mismo identificador
+
+     target:     elemento DOM sobre el que se ha producido el evento, incluso 
+                 si el dedo se ha movido fuera de este elemento
+
+     screenX:    coordenada horizontal relativa a la pantalla
+
+     screenY:    coordenada vertical relativa a la pantalla
+  
+     clientX:    coordenada horizontal del punto de contacto relativa al
+                 viewport, sin incluir el offset del scroll
+
+     clientY:    coordenada vertical del punto de contacto relativa al 
+                 viewport, sin incluir el offset del scroll
+
+     pageX:      coordenada horizontal del punto de contacto relativa al 
+                 viewport, incluyendo el offset del scroll
+
+     pageY:      coordenada vertical del punto de contacto relativa al 
+                 viewport, incluyendo el offset del scroll
+
+
+   En la implementación de este juego se utilizan sólo 2 de las listas
+   de eventos táctiles: targetTouches y changedTouches.
+
+   targetTouches se usa para controlar los dos botones de flecha
+   izquierda y derecha. Tenemos como requisito el que el usuario pueda
+   desplazar su dedo entre los botones de las flechas, sin necesidad
+   de levantarlo para cambiar de dirección. Para ello, cada vez que
+   hay un evento táctil cualquiera en la pantalla, comprobamos si hay
+   toques sobre la zona de cada botón de dirección en la lista
+   targetTouches (que es todo el canvas, pues el manejador
+   trackTouch() se asocia al canvas). Cuando se ejecuta el manejador
+   se apunta que está presionado un botón de dirección si hay eventos
+   en targetTouches sobre la zona del botón, incluso si el toque
+   original sobre la pantalla del dedo que causó el evento que se está
+   procesando no se produjo en el botón sobre el que actualmente está
+   posado el dedo. Ejemplo: se pulsa el botón flecha izquierda (o el
+   de disparo) pero luego se desplaza ese mismo dedo, sin levantarlo,
+   hasta que está encima de la flecha derecha.
+
+   Por el contrario, para que el usuario tenga que pulsar de nuevo el
+   botón de disparo antes de que se pueda producir un nuevo disparo,
+   sólo se considera que se ha pulsado el botón de disparo si el
+   evento es de tipo touchstart y además el lugar en el que se ha
+   producido el evento es sobre el botón de disparo.
+
+
+
+   Documentación sobre uso de pantalla táctil en HTML5:
+     http://mobiforge.com/developing/story/html5-mobile-web-touch-events
+     http://www.w3.org/TR/2013/REC-touch-events-20131010/
+     http://www.html5rocks.com/en/mobile/touchandmouse/
+
+
+3. Incoropora la funcionalidad que has añadido en anteriores
+   prototipos al código que proporcionamos en este prototipo. El
+   código fuente del prototipo está en el directorio public/
+
+4. Comprueba que todos los tests del prototipo 12-levels siguen
+   pasando en este prototipo. Añade para ello Jasmine a este proyecto
+   ya que no se proporciona ninguno de los ficheros de Jasmine. El
+   código fuente del prototipo está en el directorio public/
+
+5. Aparece un nuevo requisito: añade un botón táctil para disparar
+   bolas de fuego. Este botón ocupará 2/5 del ancho de la pantalla y
+   aparecerá situado entre el botón de dirección derecha y el de
+   disparo. Con este botón se podrán disparar bolas de fuego tanto
+   hacia la derecha como hacia la izquierda. Si se pulsa el botón y
+   luego se desliza hacia arriba, retirándolo de la pantalla táctil en
+   un punto que esté más a la derecha/izquierda que el toque original
+   sobre el botón de disparo de bolas de fuego, la bomba describirá
+   una trayectoria parabólica hacia la derecha/izquierda.
+

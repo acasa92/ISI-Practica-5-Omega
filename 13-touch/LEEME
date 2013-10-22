@@ -1,0 +1,46 @@
+           Servidor para prototipos móviles de alien-invasion
+                         Prototipo 13-touch
+
+            Asignatura Ingeniería de Sistemas de Información
+                           Curso 2013-14
+
+
+              Pedro de las Heras Quirós, GSyC-URJC
+                        pheras @ gmail . com
+
+
+
+Este código node implementa un servidor HTTP para poder probar las versiones 
+móviles/táctiles de Alien Invasion
+
+No es una aplicación Web completa, sino una demostración para clase.
+
+
+Para probar este código:
+=======================
+
+1. Comprueba si tienes instalado node ejecutando el comando node. 
+   Si está instalado saldrá un cursor: > 
+   Para salir de node pulsa CTRL-D
+
+2. Si no tienes instalado node ejecuta estas instrucciones:
+    sudo apt-get update
+    sudo apt-get install -y python-software-properties python g++ make
+    sudo add-apt-repository -y ppa:chris-lea/node.js
+    sudo apt-get update
+    sudo apt-get install -y nodejs   
+
+3. Ejecuta en este directorio el siguiente comando: npm install
+
+4. Arranca el servidor: node server.js
+
+5. En un navegador carga esta URL: http://localhost:3000
+
+
+Descripción del ejemplo
+=======================
+
+En el directorio public está el código de un prototipo de la
+aplicación alien-invasion
+
+
