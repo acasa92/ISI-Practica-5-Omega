@@ -527,7 +527,7 @@ var TouchControls = function() {
 		 this.startedinY = touch.pageY;
 		 this.startedinID = touch.identifier;
 	    }
-	    if(e.type == 'touchmove' && touch.identifier == this.startedinID) {
+	    if(e.type == 'touchend' && touch.identifier == this.startedinID) {
 		if (this.startedinY > touch.pageY && this.startedinX < touch.pageX) {
 		
 		    Game.keys['fireballn'] = true;
