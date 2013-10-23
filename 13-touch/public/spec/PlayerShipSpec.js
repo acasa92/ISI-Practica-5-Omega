@@ -34,7 +34,7 @@ describe("Clase PlayerShip", function(){
 	// Necesitamos tener Game.width y Game.height para que el
 	// constructor de PlayerShip pueda inicializar x e y
 	Game = {width: 320, height: 480};
-
+	SpriteSheet.map = {ship: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 	var miNave = new PlayerShip();
 
 	miNave.draw();
@@ -64,7 +64,7 @@ describe("Clase PlayerShip", function(){
 	// necesitamos Geame.keys para saber si se ha pulsado una
 	// tecla
 	Game = {width: 320, height: 480, keys: {'left': false}};
-	
+	SpriteSheet.map = {ship: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 	// Creamos un PlayerShip para testar
 	var miNave = new PlayerShip();	
 
@@ -84,7 +84,7 @@ describe("Clase PlayerShip", function(){
 
 	// Hacemos que se pulse la tecla left:
 	Game = {width: 320, height: 480, keys: {'left': true}};
-
+	SpriteSheet.map = {ship: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 	// Creamos un PlayerShip para testar
 	var miNave = new PlayerShip();
 
@@ -115,6 +115,7 @@ describe("Clase PlayerShip", function(){
     });
 
 	it("PlayerShip.newShoot()", function() {
+	SpriteSheet.map = {ship: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 	var miNave = new PlayerShip();
 	//No pulsada y sin pulsar
 	Game = {keys: {'fire': false}};

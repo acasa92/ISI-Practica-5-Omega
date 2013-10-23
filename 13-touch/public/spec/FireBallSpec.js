@@ -34,6 +34,7 @@ describe("FireBallSpec", function() {
 	});
 
 	it("FireBallSpec.step()", function() {
+		SpriteSheet.map = {fireball: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 		var pm = new PlayerFireball(1,1000,1);
 		var dummyBoard = { remove: function(obj) {},	
 				collide:function(){}
@@ -52,6 +53,7 @@ describe("FireBallSpec", function() {
 	});
 	
 	it("FireBallSpec.draw()", function() {
+		SpriteSheet.map = {fireball: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 		var pm = new PlayerFireball(1,2,1);
 		SpriteSheet = { draw: function(ctx, name, x, y) {} };
 		spyOn(SpriteSheet, "draw");
