@@ -37,7 +37,6 @@ describe("Clase Starfield", function(){
 
     it("draw + step + draw", function(){
 	spyOn(ctx, "drawImage");
-
 	Game = {height : 480 , width : 320};
 
 	// Ponemos velocidad 1 para testar más fácilmente

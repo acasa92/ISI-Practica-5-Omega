@@ -109,7 +109,7 @@ describe("Game singleton", function(){
 
 	// Prueba a reducir el número de milisegundos de espera, hasta
 	// que falle
-	waits(300)
+	waits(350);
 
 	runs(function(){
 	    expect(Game.loop.calls.length).toBeGreaterThan(10);
