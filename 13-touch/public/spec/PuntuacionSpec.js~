@@ -60,12 +60,12 @@ describe("Enemyes", function() {
 		var gp = new GamePoints();
 		var missile = new PlayerMissile(100,100);
 		missile.x = 100;
-		missile.y = 107;
+		missile.y = 100;
 		var enemy = new Enemy(enemies.basic);
 		gb.add(missile);
 		gb.add(enemy);
 		expect(Game.points).toBe(0);
-		gb.step(0.01);
+		gb.step(0.0000001);
 		expect(Game.points).toBe(100);
 	});
 

@@ -6,7 +6,8 @@ var sprites = {
     enemy_ship: { sx: 116, sy: 0, w: 42, h: 43, frames: 1 },
     enemy_circle: { sx: 158, sy: 0, w: 32, h: 33, frames: 1 },
     explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12 },
-    fireball: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 }
+    fireball: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 },
+    enemy_missile: { sx: 9, sy: 42, w: 3, h: 20, frame: 1 }
 };
 
 var enemies = {
@@ -309,10 +310,11 @@ PlayerShip.prototype.type = OBJECT_PLAYER;
 // Llamada cuando una nave enemiga colisiona con la nave del usuario
 PlayerShip.prototype.hit = function(damage) {
 
-    this.board.add(new Explosion(this.x + this.w/2, 
-                                     this.y + this.h/2,true));
   
-    this.board.remove(this);
+    if (this.board.remove(this)){
+    	this.board.add(new Explosion(this.x + this.w/2, 
+                                     this.y + this.h/2,true));
+    }
 };
 
 
@@ -357,8 +359,14 @@ PlayerFireball.prototype.step = function(dt)  {
     this.x += this.vx * dt;
     this.vy += 150;
     var collision = this.board.collide(this,OBJECT_ENEMY);
+    var collisionProjectile = this.board.collide(this,OBJECT_ENEMY_PROJECTILE);
+    
+    if(collisionProjectile) {
+    	this.board.remove(this); 
+    }
     if(collision) {
 	collision.hit(this.damage);
+	
     } else if(this.y < -this.h) { 
          this.board.remove(this); 
     }
@@ -405,7 +413,8 @@ Enemy.prototype.type = OBJECT_ENEMY;
 // es la edad de este enemigo
 Enemy.prototype.baseParameters = { A: 0, B: 0, C: 0, D: 0, 
                                    E: 0, F: 0, G: 0, H: 0,
-                                   t: 0 };
+                                   t: 0, reloadTime: 0.75, 
+                                   reload: 0 };
 
 Enemy.prototype.step = function(dt) {
     // Actualizamos la edad
@@ -441,6 +450,18 @@ Enemy.prototype.step = function(dt) {
 	this.board.remove(this);
     }
 
+     if(this.reload <= 0 && Math.random() < (this.firePercentage || 0.01) ) {
+	this.reload = this.reloadTime;
+	if(this.missiles == 2) {
+	    this.board.add(new EnemyMissile(this.x+this.w-2,this.y+this.h/2));
+	    this.board.add(new EnemyMissile(this.x+2,this.y+this.h/2));
+	} else {
+	    this.board.add(new EnemyMissile(this.x+this.w/2,this.y+this.h));
+	}
+
+    }
+    this.reload-=dt;
+    
     if(this.y > Game.height ||
        this.x < -this.w ||
        this.x > Game.width) {
@@ -450,13 +471,34 @@ Enemy.prototype.step = function(dt) {
 
 Enemy.prototype.hit = function(damage) {
     this.health -= damage;
-    if(this.health <= 0) {
-	Game.points += this.points || 100;
-	this.board.add(new Explosion(this.x + this.w/2, 
-                                     this.y + this.h/2));
-	this.board.remove(this);
+    if(this.health <=0) {
+	if(this.board.remove(this)) {
+	    Game.points += this.points || 100;
+	    this.board.add(new Explosion(this.x + this.w/2, 
+					 this.y + this.h/2));
+	}
     }
-}
+};
+
+var EnemyMissile = function(x,y) {
+    this.setup('enemy_missile',{ vy: 200, damage: 10 });
+    this.x = x - this.w/2;
+    this.y = y;
+};
+
+EnemyMissile.prototype = new Sprite();
+EnemyMissile.prototype.type = OBJECT_ENEMY_PROJECTILE;
+
+EnemyMissile.prototype.step = function(dt)  {
+    this.y += this.vy * dt;
+    var collision = this.board.collide(this,OBJECT_PLAYER)
+    if(collision) {
+	collision.hit(this.damage);
+	this.board.remove(this);
+    } else if(this.y > Game.height) {
+	this.board.remove(this); 
+    }
+};
 
 
 // Constructor para la explosión
