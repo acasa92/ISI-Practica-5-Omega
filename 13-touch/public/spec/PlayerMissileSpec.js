@@ -64,6 +64,7 @@ describe("PlayerMissile", function() {
 	});
 
 	it("PlayerMissile.step()", function() {
+		SpriteSheet.map = {missile: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 		var pm = new PlayerMissile(1,1000);
 		var dummyBoard = { remove: function(obj) {} , collide: function(){}};
 		pm.board = dummyBoard;
@@ -83,6 +84,7 @@ describe("PlayerMissile", function() {
 	});
 	
 	it("PlayerMissile.draw()", function() {
+		SpriteSheet.map = {missile: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 		var pm = new PlayerMissile(1,2);
 		SpriteSheet = { draw: function(ctx, name, x, y) {} };
 		octx = {};
