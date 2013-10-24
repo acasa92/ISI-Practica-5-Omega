@@ -33,7 +33,7 @@ describe("Clase PlayerShip", function(){
 
 	// Necesitamos tener Game.width y Game.height para que el
 	// constructor de PlayerShip pueda inicializar x e y
-	Game = {width: 320, height: 480};
+	Game = {width: 320, height: 480, playerOffset : 10};
 	SpriteSheet.map = {ship: { sx: 0, sy: 64, w: 64, h: 64, frames: 1 } };
 	var miNave = new PlayerShip();
 
