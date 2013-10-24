@@ -152,6 +152,40 @@ describe("LevelSpec", function() {
 
 	});
 
+	it("tras morir informa de que hemos perdido", function() {
+
+		Game.canvas = document.getElementById("game");
+		Game.width = Game.canvas.width;
+		Game.height= Game.canvas.height;
+		SpriteSheet.load(sprites,startGame);
+		spyOn(window, "playGame").andCallThrough();
+		spyOn(window, "loseGame");
+		Game.loop(); //Empieza el bucle
+		expect(window.playGame).not.toHaveBeenCalled(); //todavia no empieza a jugar
+		Game.keys['fire'] = false;
+		waits(200);
+
+		runs(function(){
+			Game.keys['fire'] = true;//pulsamos tecla para empezar
+			waits(200);
+		});
+
+		runs(function(){
+			expect(window.playGame).toHaveBeenCalled();//empieza el nivel 1
+			Game.keys['fire'] = false;//se suelta la tecla fire para solo
+									//tener que pulsarla en el siguiente nivel
+			waits(14000);
+		});
+
+		
+		
+		runs(function() {
+			expect(window.loseGame).toHaveBeenCalled();//la nave ha colisionado
+		});
+		
+		
+	});
+
 	it("tras el nivel 1 aparece el 2", function() {
 		level1 = [[ 0,        1000,  500,         'step'],];
 		level2 = [[ 0,        500,  500,         'step'],];
@@ -208,40 +242,6 @@ describe("LevelSpec", function() {
 		runs(function() {
 			expect(window.winGame).toHaveBeenCalled();//se acaba el juego/ganamos
 		});
-	});
-
-	it("tras morir informa de que hemos perdido", function() {
-
-		Game.canvas = document.getElementById("game");
-		Game.width = Game.canvas.width;
-		Game.height= Game.canvas.height;
-		SpriteSheet.load(sprites,startGame);
-		spyOn(window, "playGame").andCallThrough();
-		spyOn(window, "loseGame");
-		Game.loop(); //Empieza el bucle
-		expect(window.playGame).not.toHaveBeenCalled(); //todavia no empieza a jugar
-		Game.keys['fire'] = false;
-		waits(100);
-
-		runs(function(){
-			Game.keys['fire'] = true;//pulsamos tecla para empezar
-			waits(100);
-		});
-
-		runs(function(){
-			expect(window.playGame).toHaveBeenCalled();//empieza el nivel 1
-			Game.keys['fire'] = false;//se suelta la tecla fire para solo
-									//tener que pulsarla en el siguiente nivel
-			waits(13000);
-		});
-
-		
-		
-		runs(function() {
-			expect(window.loseGame).toHaveBeenCalled();//la nave ha colisionado
-		});
-		
-		
 	});
 	
 });

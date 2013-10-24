@@ -142,6 +142,7 @@ var loseGame = function() {
     Game.setBoard(3,new TitleScreen("You lose!", 
                                     "Press fire to play again",
                                     playGame));
+	Game.points=0;
 };
 
 
