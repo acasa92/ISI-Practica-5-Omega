@@ -351,7 +351,7 @@ var PlayerFireball = function(x,y,sentido) {
 
 // Heredamos del prototipo new Sprite()
 PlayerFireball.prototype = new Sprite();
-PlayerMissile.prototype.type = OBJECT_POWERUP;
+PlayerFireball.prototype.type = OBJECT_POWERUP;
 
 PlayerFireball.prototype.step = function(dt)  {
     this.vx= 200*this.sentido;
