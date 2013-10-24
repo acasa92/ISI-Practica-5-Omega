@@ -1,4 +1,4 @@
-describe("Enemyes", function() {
+describe("Puntuaciones", function() {
 
 	var canvas, ctx;
 	var SpriteSheetOrig, GameOrig;

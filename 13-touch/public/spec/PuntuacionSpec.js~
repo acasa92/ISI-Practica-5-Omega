@@ -32,7 +32,7 @@ describe("Enemyes", function() {
 		};
 		var gp = new GamePoints();
 		var enemy = new Enemy(enemies.basic);
-		enemy.board = {add: function(){}, remove: function(){}};
+		enemy.board = {add: function(){}, remove: function(){ return true;}, };
 		expect(Game.points).toBe(0);
 		enemy.hit(10);
 		expect(Game.points).toBe(100);

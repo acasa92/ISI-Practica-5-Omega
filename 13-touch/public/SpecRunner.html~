@@ -29,8 +29,9 @@
   <script type="text/javascript" src="spec/EnemySpec.js"></script>
   <script type="text/javascript" src="spec/FireBallSpec.js"></script>
   <script type="text/javascript" src="spec/CollisionsSpec.js"></script>
-  <script type="text/javascript" src="spec/LevelSpec.js"></script>
   <script type="text/javascript" src="spec/PuntuacionSpec.js"></script>
+  <script type="text/javascript" src="spec/LevelSpec.js"></script>
+  <script type="text/javascript" src="spec/EnemyMissileSpec.js"></script>
 
   <script type="text/javascript">
     (function() {
