@@ -18,24 +18,39 @@ var Game = new function() {
 	
     // Inicializa el juego
     this.initialize = function(canvasElementId,sprite_data,callback) {
-	this.canvas = document.getElementById(canvasElementId)
+	this.canvas = document.getElementById(canvasElementId);
+
+	// Desplazamiento de la nave del jugador para que aparezca
+	// encima de los botones táctiles
+	this.playerOffset = 10;
+
+	// En pantallas táctiles grandes haremos que el tamaño de la
+	// ventana sea el doble del tamaño del canvas en pixels, para
+	// mejorar así el rendimiento al tener que procesar menos
+	// pixels.  En estas pantallas grandes esta propiedad será
+	// 2. Se determina en this.setupMobile() Cuando se hagan
+	// cálculos de eventos de toque hay que tener en cuenta este
+	// factor multiplicador
+	this.canvasMultiplier= 1;
+
+	// Configuración para móviles
+	this.setupMobile();
+
 	this.width = this.canvas.width;
 	this.height= this.canvas.height;
 
 	this.ctx = this.canvas.getContext && this.canvas.getContext('2d');
 	if(!this.ctx) { return alert("Please upgrade your browser to play"); }
 
-	// Propiedades para pantallas táctiles
-	this.canvasMultiplier = 1;
-	this.playerOffset = 10;
-	
 	this.setupInput();
 
-	// Añadimos como un nuevo tablero al juego el panel con los
-	// botones para pantalla táctil
-	this.setBoard(4,new TouchControls());
-	
 	this.loop(); 
+
+	// Añadimos como un nuevo tablero al juego el panel con los
+	// botones para pantalla táctil, sólo si hemos detectado pantalla móvil
+	if(this.mobile) {
+	    this.setBoard(4,new TouchControls());
+	}
 
 	SpriteSheet.load(sprite_data,callback);
     };
@@ -86,6 +101,65 @@ var Game = new function() {
     // Son capas: se dibujan de menor num a mayor
     // Cada capa tiene que tener en su interfaz step() y draw()
     this.setBoard = function(num,board) { boards[num] = board; };
+
+// Configuración para móviles
+    this.setupMobile = function() {
+	var container = document.getElementById("container"),
+          // Comprobar si el browser soporta eventos táctiles
+          hasTouch =  !!('ontouchstart' in window),
+	  // Ancho y alto de la ventana del browser
+          w = window.innerWidth, h = window.innerHeight;
+
+	if(hasTouch) { this.mobile = true; }
+
+	// Salir si la pantalla es mayor que cierto tamaño máximo o si no
+	// tiene soporte para eventos táctiles
+	if(screen.width >= 1280 || !hasTouch) { return false; }
+
+	// Comprobar si el usuario está en modo landscape
+	// Si no lo está, pedirle que rote el dispositivo 
+	if(w > h) {
+	    alert("Please rotate the device and then click OK");
+	    w = window.innerWidth; h = window.innerHeight;
+	}
+
+	// Cambiar el tamaño del div container para que sea mayor que
+	// la página para permitir eliminar la barra de dirección del
+	// navegador
+	container.style.height = h*2 + "px";
+
+	// Desplazar la ventana mínimamente para forzar a que desaparezca
+	// la barra de dirección del navegador
+	window.scrollTo(0,1);
+
+	// Cambiar el tamaño del contenedor para que sea el de la ventana
+	h = window.innerHeight + 2;
+	container.style.height = h + "px";
+	container.style.width = w + "px";
+	container.style.padding = 0;
+
+	//  Comprobar si estamos en un dispositivo táctil grande (tableta)
+	if(h >= this.canvas.height * 1.75 || w >= this.canvas.height * 1.75) {
+	    // Si grande, tamaño del canvas = mitad del tamaño de la ventana
+            // Así se mejora el rendimiento al tener un canvas más pequeño
+	    this.canvasMultiplier = 2;
+	    this.canvas.width = w / 2;
+	    this.canvas.height = h / 2;
+	    this.canvas.style.width = w + "px";
+	    this.canvas.style.height = h + "px";
+	} else {
+            //  Si no grande, tamaño del canvas = tamaño de la ventana
+	    this.canvas.width = w;
+	    this.canvas.height = h;
+	}
+
+	//  Poner el canvas en una posición absoluta en la esquina
+	//  superior izquierda de la ventana
+	this.canvas.style.position='absolute';
+	this.canvas.style.left="0px";
+	this.canvas.style.top="0px";
+
+    };
 };
 
 
