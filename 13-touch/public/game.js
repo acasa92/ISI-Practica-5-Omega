@@ -51,6 +51,7 @@ var startGame = function() {
     Game.setBoard(3,new TitleScreen("Alien Invasion", 
                                     "Press fire to start playing",
                                     playGame));
+    Game.setBoard(5,new GamePoints(0));
 };
 
 
@@ -141,6 +142,7 @@ var loseGame = function() {
     Game.setBoard(3,new TitleScreen("You lose!", 
                                     "Press fire to play again",
                                     playGame));
+	Game.points=0;
 };
 
 
@@ -449,6 +451,7 @@ Enemy.prototype.step = function(dt) {
 Enemy.prototype.hit = function(damage) {
     this.health -= damage;
     if(this.health <= 0) {
+	Game.points += this.points || 100;
 	this.board.add(new Explosion(this.x + this.w/2, 
                                      this.y + this.h/2));
 	this.board.remove(this);

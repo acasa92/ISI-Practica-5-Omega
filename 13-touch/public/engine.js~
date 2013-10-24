@@ -18,8 +18,21 @@ var Game = new function() {
 	
     // Inicializa el juego
     this.initialize = function(canvasElementId,sprite_data,callback) {
-	this.canvas = document.getElementById(canvasElementId)
-	
+	this.canvas = document.getElementById(canvasElementId);
+
+	// Desplazamiento de la nave del jugador para que aparezca
+	// encima de los botones táctiles
+	this.playerOffset = 10;
+
+	// En pantallas táctiles grandes haremos que el tamaño de la
+	// ventana sea el doble del tamaño del canvas en pixels, para
+	// mejorar así el rendimiento al tener que procesar menos
+	// pixels.  En estas pantallas grandes esta propiedad será
+	// 2. Se determina en this.setupMobile() Cuando se hagan
+	// cálculos de eventos de toque hay que tener en cuenta este
+	// factor multiplicador
+	this.canvasMultiplier= 1;
+
 	// Configuración para móviles
 	this.setupMobile();
 
@@ -29,20 +42,15 @@ var Game = new function() {
 	this.ctx = this.canvas.getContext && this.canvas.getContext('2d');
 	if(!this.ctx) { return alert("Please upgrade your browser to play"); }
 
-	// Propiedades para pantallas táctiles
-	this.canvasMultiplier = 1;
-
-
-
-	this.playerOffset = 10;
-	
 	this.setupInput();
 
-	// Añadimos como un nuevo tablero al juego el panel con los
-	// botones para pantalla táctil
-	this.setBoard(4,new TouchControls());
-	
 	this.loop(); 
+
+	// Añadimos como un nuevo tablero al juego el panel con los
+	// botones para pantalla táctil, sólo si hemos detectado pantalla móvil
+	if(this.mobile) {
+	    this.setBoard(4,new TouchControls());
+	}
 
 	SpriteSheet.load(sprite_data,callback);
     };
