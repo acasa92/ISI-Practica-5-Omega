@@ -117,6 +117,7 @@ describe("CollisionsSpec", function() {
 		var pm = new Enemy(enemies.basic);
 		pm.x=1;
 		pm.y=2;
+		pm.reload = 100000000;//Para que la nave no dispare
 		var board = new GameBoard();
 
 		board.add(miBola);
@@ -147,6 +148,7 @@ describe("CollisionsSpec", function() {
 		var pm = new Enemy(enemies.basic);
 		pm.x=1;
 		pm.y=2;
+		pm.reload = 100000;
 		var board = new GameBoard();
 		
 		board.add(miShip);
@@ -175,6 +177,7 @@ describe("CollisionsSpec", function() {
 		enem.x = 5;
 		enem.y = 5;
 		enem.health = 10;
+		enem.reload = 100000;
 
 
 		gb.add(misil);
@@ -204,6 +207,7 @@ describe("CollisionsSpec", function() {
 		enem.x = 5;
 		enem.y = 5;
 		enem.health = 20;
+		enem.reload = 10000;
 
 
 		gb.add(misil);
