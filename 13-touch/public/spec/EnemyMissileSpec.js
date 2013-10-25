@@ -33,24 +33,48 @@ describe("EnemyMissileSpec", function() {
 		expect(me.vy>0).toBe(true);
 	});
 
-	/*it("Misilenemigos.step()", function() {
+	it("Misilenemigos.step()", function() {
 		SpriteSheet.map =  {enemy_missile: { sx: 9, sy: 42, w: 3, h: 20, frame: 1 }};
-		var me = new EnemyMissile(1,20000);
-		var dummyBoard = { remove: function(obj) {} , collide: function(){}};
+		var me = new EnemyMissile(1,100);
+		me.y = 100;
+		var dummyBoard = { 
+							remove: function(obj) {} , 
+							collide: function(){return false;}
+						};
+		Game.height = 120;
 		me.board = dummyBoard;
 		spyOn(dummyBoard, "remove");
+		prevX = me.x;
+		prevY = me.y;
 	
 		//sin salirse de la pantalla
-		
-		
-		me.step(0.01);
-
+		dt = 0.00001;
+		me.step(dt);
 		expect(dummyBoard.remove).not.toHaveBeenCalled();
+		expect(me.x).toBe(prevX);
+		expect(me.y).toBe(prevY+me.vy*dt);
 
 		//saliendose de la pantalla
-		me.step(175757554777); 
+		me.step(10000); 
 		expect(dummyBoard.remove).toHaveBeenCalledWith(me);
-	});*/
+
+		//con colision
+		var dummyObj = { hit: function(){} };
+		var dummyBoard2 = { 
+							remove: function(obj) {} , 
+							collide: function() { return dummyObj; }
+						};
+		spyOn(dummyObj, "hit");
+		spyOn(dummyBoard2, "remove");
+		var me2 = new EnemyMissile(1,100);
+		me2.board = dummyBoard2;
+		me2.y = 100;
+		me2.step(0.00001);
+		expect(dummyBoard2.remove).toHaveBeenCalledWith(me2);
+		expect(dummyObj.hit).toHaveBeenCalledWith(me2.damage);
+	});
+
+
 	it("Misil contra nave", function() {
 
 		SpriteSheet = { 
@@ -70,7 +94,9 @@ describe("EnemyMissileSpec", function() {
 		expect(gb.objects.length).toBe(2);
 		gb.step(0.0000001);
 		expect(gb.objects.length).toBe(1);
+		expect(gb.objects[0].sprite).toBe('explosion');
 	});
+
 	it("bola fuego contra misilenemigo", function() {
 
 		SpriteSheet = { 
@@ -92,5 +118,6 @@ describe("EnemyMissileSpec", function() {
 		expect(gb.objects.length).toBe(2);
 		gb.step(0.0000001);
 		expect(gb.objects.length).toBe(1);
+		expect(gb.objects[0]).toBe(missile);
 	});
 });
